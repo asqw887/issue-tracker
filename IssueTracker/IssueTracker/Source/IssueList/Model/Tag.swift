@@ -9,9 +9,8 @@ import Foundation
 
 final class Tag: Inform {
 
-    let backgroundColor: String
-
-    init(title: String, backgroundColor: String) {
+    let backgroundColor: UInt64
+    init(title: String, backgroundColor: UInt64) {
         self.backgroundColor = backgroundColor
         super.init(title: title)
     }
