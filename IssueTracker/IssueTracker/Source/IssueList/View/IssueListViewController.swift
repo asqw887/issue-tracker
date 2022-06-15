@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SwipeCellKit
 
 class IssueListViewController: UIViewController {
 
@@ -51,7 +52,12 @@ class IssueListViewController: UIViewController {
         self.view.addSubview(collectionView)
         setLayout()
         setNavigationController()
+        setAttribute()
 
+    }
+
+    private func setAttribute() {
+        self.view.backgroundColor = .red
     }
 
     private func setLayout() {
@@ -74,13 +80,35 @@ class IssueListViewController: UIViewController {
     }
 }
 
-extension IssueListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension IssueListViewController: UICollectionViewDelegate, UICollectionViewDataSource, SwipeCollectionViewCellDelegate {
+    func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+
+        let deleteAction = SwipeAction(style: .destructive, title: "삭제") { action, indexPath in
+            //TODO: - 이슈 삭제 로직 추가
+        }
+        
+        let issueCloseAction = SwipeAction(style: .default, title: "닫기") { Action, indexPath in
+            //TODO: - 이슈 닫기 기능 추가
+        }
+
+        
+        deleteAction.image = UIImage(named: "delete")
+        issueCloseAction.image = UIImage(named: ")
+        return [deleteAction]
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 2
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IssueCell.reuseIdentifier, for: indexPath)
+        guard let cell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: IssueCell.reuseIdentifier,
+                                     for: indexPath)
+                as? SwipeCollectionViewCell
+        else { return SwipeCollectionViewCell() }
+        cell.delegate = self
         return cell
     }
 
