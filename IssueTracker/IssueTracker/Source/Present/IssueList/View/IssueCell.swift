@@ -13,18 +13,12 @@ final class IssueCell: UITableViewCell {
     static let reuseIdentifier = "IssueCell"
     var issueListViewModel = IssueListViewModel()
 
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        addsubviews()
-//        setLayouts()
-//    }
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addsubviews()
         setLayouts()
     }
-
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("\(#function) has not been implemented")
