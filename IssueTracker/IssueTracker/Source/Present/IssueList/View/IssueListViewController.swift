@@ -87,7 +87,7 @@ final class IssueListViewController: UIViewController {
     }
 
     @objc private func filterButtonPressed(_ sender: Any) {
-        // TODO: filter Modal present
+        self.navigationController?.pushViewController(FilterViewController(), animated: true)
     }
 
     @objc private func selectButtonPressed(_ sender: Any) {

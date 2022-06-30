@@ -28,6 +28,8 @@
 		B3773F37285864E2008C4AAF /* IssueListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3773F36285864E2008C4AAF /* IssueListViewController.swift */; };
 		B3773F3928586D97008C4AAF /* IssueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3773F3828586D97008C4AAF /* IssueCell.swift */; };
 		B3839EB3286C339500FFA23A /* IssueCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3839EB2286C339500FFA23A /* IssueCellViewModel.swift */; };
+		B3839EB8286D955600FFA23A /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3839EB7286D955600FFA23A /* FilterViewController.swift */; };
+		B3839EBA286DA1BB00FFA23A /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3839EB9286DA1BB00FFA23A /* FilterCell.swift */; };
 		B3BFBD3628572E5400D69A34 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BFBD3528572E5400D69A34 /* AppDelegate.swift */; };
 		B3BFBD3828572E5400D69A34 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BFBD3728572E5400D69A34 /* SceneDelegate.swift */; };
 		B3BFBD3A28572E5400D69A34 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BFBD3928572E5400D69A34 /* LoginViewController.swift */; };
@@ -86,6 +88,8 @@
 		B3773F36285864E2008C4AAF /* IssueListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueListViewController.swift; sourceTree = "<group>"; };
 		B3773F3828586D97008C4AAF /* IssueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueCell.swift; sourceTree = "<group>"; };
 		B3839EB2286C339500FFA23A /* IssueCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueCellViewModel.swift; sourceTree = "<group>"; };
+		B3839EB7286D955600FFA23A /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		B3839EB9286DA1BB00FFA23A /* FilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
 		B3BFBD3228572E5400D69A34 /* IssueTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IssueTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3BFBD3528572E5400D69A34 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3BFBD3728572E5400D69A34 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -244,6 +248,31 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		B3839EB4286D8A1D00FFA23A /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				B3839EB6286D94FD00FFA23A /* ViewModel */,
+				B3839EB5286D94F300FFA23A /* View */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
+		B3839EB5286D94F300FFA23A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B3839EB7286D955600FFA23A /* FilterViewController.swift */,
+				B3839EB9286DA1BB00FFA23A /* FilterCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B3839EB6286D94FD00FFA23A /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		B3BFBD2928572E5400D69A34 = {
 			isa = PBXGroup;
 			children = (
@@ -314,6 +343,7 @@
 		B3D7371828694CE20053E887 /* Present */ = {
 			isa = PBXGroup;
 			children = (
+				B3839EB4286D8A1D00FFA23A /* Filter */,
 				00DBECBA2859C379004BD0CA /* Support */,
 				B3D7371528694A250053E887 /* Window */,
 				002422002862BDE200F97984 /* Login */,
@@ -571,6 +601,8 @@
 				000651BE285A09DE00A6426A /* IssueTrackerTarget.swift in Sources */,
 				B3BFBD3828572E5400D69A34 /* SceneDelegate.swift in Sources */,
 				000651C7285A0C0700A6426A /* BaseTarget.swift in Sources */,
+				B3839EB8286D955600FFA23A /* FilterViewController.swift in Sources */,
+				B3839EBA286DA1BB00FFA23A /* FilterCell.swift in Sources */,
 				000651C1285A0A9C00A6426A /* NetworkError.swift in Sources */,
 				002422022862BDF100F97984 /* LoginViewModel.swift in Sources */,
 				B3D737142864330B0053E887 /* RootWindowViewModel.swift in Sources */,
