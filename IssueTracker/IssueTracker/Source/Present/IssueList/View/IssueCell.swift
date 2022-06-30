@@ -11,35 +11,38 @@ import SnapKit
 final class IssueCell: UITableViewCell {
 
     static let reuseIdentifier = "IssueCell"
-    var issueListViewModel = IssueListViewModel()
+    let issueListViewModel = IssueListViewModel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addsubviews()
         setLayouts()
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("\(#function) has not been implemented")
     }
 
-    var titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "제목"
         label.font = .boldSystemFont(ofSize: 22)
+        label.numberOfLines = 1
         return label
     }()
 
-    var descriptionLabel: UILabel = {
+    let descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = "이슈에 대한 설명(최대 두줄 까지 보여줄 수 있다)"
+        label.numberOfLines = 2
         label.textColor = .systemGray
         label.font = .systemFont(ofSize: 17)
+        label.sizeToFit()
         return label
     }()
 
-    var milestoneLabel: UILabel = {
+    let milestoneLabel: UILabel = {
         let label = UILabel()
         label.text = "마일스톤 이름"
         label.textColor = .systemGray
@@ -47,7 +50,7 @@ final class IssueCell: UITableViewCell {
         return label
     }()
 
-    var tagLabel: UILabel = {
+    let tagLabel: UILabel = {
         let label = UILabel()
         label.text = "레이블 이름"
         label.backgroundColor = .systemGray2
@@ -59,38 +62,25 @@ final class IssueCell: UITableViewCell {
         return label
     }()
 
+    let cellStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 16
+        return stackView
+    }()
+
     private func addsubviews() {
-        self.contentView.addSubview(titleLabel)
-        self.contentView.addSubview(descriptionLabel)
-        self.contentView.addSubview(milestoneLabel)
-        self.contentView.addSubview(tagLabel)
+        [titleLabel, descriptionLabel, milestoneLabel, tagLabel].forEach { [unowned self] view in
+            self.cellStackView.addArrangedSubview(view)
+        }
+        self.contentView.addSubview(cellStackView)
     }
 
     private func setLayouts() {
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(contentView).offset(24)
-            make.left.trailing.equalTo(contentView).offset(16)
-            make.height.equalTo(28)
-        }
-
-        descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(16)
-            make.left.trailing.equalTo(titleLabel)
-            make.height.equalTo(28)
-        }
-
-        milestoneLabel.snp.makeConstraints { make in
-            make.top.equalTo(descriptionLabel.snp.bottom).offset(16)
-            make.left.trailing.equalTo(titleLabel)
-            make.height.equalTo(22)
-        }
-
-        tagLabel.snp.makeConstraints { make in
-            make.top.equalTo(milestoneLabel.snp.bottom).offset(16)
-            make.left.equalTo(titleLabel)
-            make.height.equalTo(22)
-            make.width.greaterThanOrEqualTo(114)
-            make.bottom.equalTo(contentView.snp.bottom).offset(-24)
+        cellStackView.snp.makeConstraints {
+            $0.edges.equalTo(contentView.safeAreaLayoutGuide).inset(16)
         }
     }
 
