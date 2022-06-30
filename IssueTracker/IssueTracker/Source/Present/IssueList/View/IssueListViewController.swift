@@ -113,4 +113,26 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
 
         return cell
     }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let issueDelete = UIContextualAction(style: .destructive, title: "삭제") {
+            (_, _, success: @escaping (Bool) -> Void) in
+            print("삭제 버튼 눌림")
+            success(true)
+        }
+        issueDelete.backgroundColor = .systemPink
+        issueDelete.image = UIImage(systemName: "trash")
+
+        let issueClose = UIContextualAction(style: .normal, title: "닫기") {
+            (_, _, success: @escaping (Bool) -> Void) in
+            print("이슈 닫기 버튼 눌림")
+            success(true)
+        }
+        issueClose.backgroundColor = .systemBlue
+        issueClose.image = UIImage(systemName: "archivebox")
+
+        // MARK: - trailingSwipe라서 0번 째 부터 가장 오른쪽에 위치함
+        /// UI 로 보이는 순서 :: 삭제, 닫기
+        return UISwipeActionsConfiguration(actions: [issueClose, issueDelete])
+    }
 }

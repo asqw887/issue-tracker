@@ -50,9 +50,10 @@ final class IssueCell: UITableViewCell {
         return label
     }()
 
-    let tagLabel: UILabel = {
-        let label = UILabel()
+    let tagLabel: PaddingLabel = {
+        let label = PaddingLabel()
         label.text = "레이블 이름"
+        // TODO: issue.tag.color 로 변경 예정
         label.backgroundColor = .systemGray2
         label.textColor = .white
         label.font = .systemFont(ofSize: 17)
@@ -82,6 +83,7 @@ final class IssueCell: UITableViewCell {
         cellStackView.snp.makeConstraints {
             $0.edges.equalTo(contentView.safeAreaLayoutGuide).inset(16)
         }
+//        tagLabel.layer.cornerRadius = tagLabel.frame.height / 2
     }
 
     func setComponenets(with viewModel: IssueCellViewModel) {
