@@ -17,6 +17,7 @@ final class IssueCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addsubviews()
         setLayouts()
+        attributes()
     }
 
     @available(*, unavailable)
@@ -24,7 +25,12 @@ final class IssueCell: UITableViewCell {
         fatalError("\(#function) has not been implemented")
     }
 
-    let titleLabel: UILabel = {
+    private let checkboxImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+        return imageView
+    }()
+
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "제목"
         label.font = .boldSystemFont(ofSize: 22)
@@ -32,7 +38,7 @@ final class IssueCell: UITableViewCell {
         return label
     }()
 
-    let descriptionLabel: UILabel = {
+    private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = "이슈에 대한 설명(최대 두줄 까지 보여줄 수 있다)"
         label.numberOfLines = 2
@@ -42,7 +48,7 @@ final class IssueCell: UITableViewCell {
         return label
     }()
 
-    let milestoneLabel: UILabel = {
+    private let milestoneLabel: UILabel = {
         let label = UILabel()
         label.text = "마일스톤 이름"
         label.textColor = .systemGray
@@ -50,7 +56,7 @@ final class IssueCell: UITableViewCell {
         return label
     }()
 
-    let tagLabel: PaddingLabel = {
+    private let tagLabel: UILabel = {
         let label = PaddingLabel()
         label.text = "레이블 이름"
         // TODO: issue.tag.color 로 변경 예정
@@ -59,11 +65,11 @@ final class IssueCell: UITableViewCell {
         label.font = .systemFont(ofSize: 17)
         label.clipsToBounds = true
         label.textAlignment = .center
-        label.layer.cornerRadius = 10
+        label.layer.cornerRadius = label.intrinsicContentSize.height / 2
         return label
     }()
 
-    let cellStackView: UIStackView = {
+    private let descriptionStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .leading
@@ -72,18 +78,37 @@ final class IssueCell: UITableViewCell {
         return stackView
     }()
 
+    private let cellStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 5
+        stackView.distribution = .fillProportionally
+        return stackView
+    }()
+
     private func addsubviews() {
-        [titleLabel, descriptionLabel, milestoneLabel, tagLabel].forEach { [unowned self] view in
-            self.cellStackView.addArrangedSubview(view)
+        [titleLabel, descriptionLabel, milestoneLabel, tagLabel].forEach { [unowned self] in
+            self.descriptionStackView.addArrangedSubview($0)
+        }
+        [descriptionStackView, checkboxImageView].forEach { [unowned self] in
+            self.cellStackView.addArrangedSubview($0)
         }
         self.contentView.addSubview(cellStackView)
+    }
+
+    private func attributes() {
+        self.selectionStyle = .none
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        self.checkboxImageView.isHidden = false
     }
 
     private func setLayouts() {
         cellStackView.snp.makeConstraints {
             $0.edges.equalTo(contentView.safeAreaLayoutGuide).inset(16)
         }
-//        tagLabel.layer.cornerRadius = tagLabel.frame.height / 2
     }
 
     func setComponenets(with viewModel: IssueCellViewModel) {

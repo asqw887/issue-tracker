@@ -24,7 +24,8 @@ final class IssueListViewController: UIViewController {
 
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.allowsSelection = false
+        tableView.allowsMultipleSelection = true
+        tableView.allowsSelectionDuringEditing = true
         tableView.register(IssueCell.self, forCellReuseIdentifier: IssueCell.self.reuseIdentifier)
         return tableView
     }()
@@ -71,10 +72,9 @@ final class IssueListViewController: UIViewController {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    
+
     private func bind() {
-        viewModel.issueList.bind { [weak self] _ in
-            guard let self = self else { return }
+        viewModel.issueList.bind { [unowned self] _ in
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -96,11 +96,11 @@ final class IssueListViewController: UIViewController {
 }
 
 extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
-    //MARK: - 보여질 셀 갯수 설정
+    // MARK: - 보여질 셀 갯수 설정
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfItemsInSection
     }
-    //MARK: - Datasource 설정
+    // MARK: - Datasource 설정
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
@@ -114,8 +114,8 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
 
         return cell
     }
-    
-    //MARK: - 좌 스와이프
+
+    // MARK: - 좌 스와이프
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let issueDelete = UIContextualAction(style: .destructive, title: "삭제") {
             (_, _, success: @escaping (Bool) -> Void) in
@@ -133,12 +133,12 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
         issueClose.backgroundColor = .systemBlue
         issueClose.image = UIImage(systemName: "archivebox")
 
-        //MARK: - trailingSwipe라서 0번 째 부터 가장 오른쪽에 위치함
+        // MARK: - trailingSwipe라서 0번 째 부터 가장 오른쪽에 위치함
         /// UI 로 보이는 순서 :: 삭제, 닫기
         return UISwipeActionsConfiguration(actions: [issueClose, issueDelete])
     }
-    
-    //TODO: - 테이블 뷰에서 최상단에 도달 했을 때 서치바 보이게 하기
-//    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-//    }
+
+    // TODO: - 테이블 뷰에서 최상단에 도달 했을 때 서치바 보이게 하기
+    //    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+    //    }
 }
