@@ -27,6 +27,7 @@ final class IssueCell: UITableViewCell {
 
     private let checkboxImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
         return imageView
     }()
 
@@ -74,26 +75,17 @@ final class IssueCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = .fillProportionally
-        stackView.spacing = 16
-        return stackView
-    }()
-
-    private let cellStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 5
-        stackView.distribution = .fillProportionally
+        stackView.spacing = 8
         return stackView
     }()
 
     private func addsubviews() {
-        [titleLabel, descriptionLabel, milestoneLabel, tagLabel].forEach { [unowned self] in
+        [descriptionLabel, milestoneLabel, tagLabel].forEach { [unowned self] in
             self.descriptionStackView.addArrangedSubview($0)
         }
-        [descriptionStackView, checkboxImageView].forEach { [unowned self] in
-            self.cellStackView.addArrangedSubview($0)
+        [titleLabel, checkboxImageView, descriptionStackView].forEach { [unowned self] in
+            self.contentView.addSubview($0)
         }
-        self.contentView.addSubview(cellStackView)
     }
 
     private func attributes() {
@@ -102,13 +94,26 @@ final class IssueCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        self.checkboxImageView.isHidden = false
+        self.checkboxImageView.isHidden = selected ? false : true
+
     }
 
     private func setLayouts() {
-        cellStackView.snp.makeConstraints {
-            $0.edges.equalTo(contentView.safeAreaLayoutGuide).inset(16)
+
+        titleLabel.snp.makeConstraints {
+            $0.leading.top.equalToSuperview().inset(16)
         }
+        checkboxImageView.snp.makeConstraints {
+            $0.top.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(16)
+            $0.leading.equalTo(titleLabel.snp.trailing).offset(16)
+            $0.bottom.equalTo(titleLabel)
+            $0.height.equalTo(checkboxImageView.snp.width)
+        }
+        descriptionStackView.snp.makeConstraints {
+            $0.bottom.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(8)
+        }
+
     }
 
     func setComponenets(with viewModel: IssueCellViewModel) {
@@ -117,5 +122,4 @@ final class IssueCell: UITableViewCell {
         tagLabel.text = viewModel.tag
         milestoneLabel.text = viewModel.milestone
     }
-
 }

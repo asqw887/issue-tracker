@@ -24,8 +24,7 @@ final class IssueListViewController: UIViewController {
 
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.allowsMultipleSelection = true
-        tableView.allowsSelectionDuringEditing = true
+        tableView.allowsSelection = false
         tableView.register(IssueCell.self, forCellReuseIdentifier: IssueCell.self.reuseIdentifier)
         return tableView
     }()
@@ -56,6 +55,18 @@ final class IssueListViewController: UIViewController {
         return barbutton
     }()
 
+    private lazy var cancelButton: UIBarButtonItem = {
+        let button = UIButton()
+        button.setTitle("취소", for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 70, height: 30)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        button.addTarget(self, action: #selector(cancelButtonPressed(_:)), for: .touchUpInside)
+
+        let barbutton = UIBarButtonItem(customView: button)
+        return barbutton
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -64,7 +75,6 @@ final class IssueListViewController: UIViewController {
         setLayout()
         setNavigationController()
         bind()
-
     }
 
     private func setLayout() {
@@ -86,12 +96,34 @@ final class IssueListViewController: UIViewController {
         self.navigationItem.setRightBarButton(selectButton, animated: true)
     }
 
-    @objc private func filterButtonPressed(_ sender: Any) {
+    @objc func filterButtonPressed(_ sender: Any) {
         // TODO: filter Modal present
     }
 
-    @objc private func selectButtonPressed(_ sender: Any) {
+    @objc func selectButtonPressed(_ sender: UIBarButtonItem!) {
         // TODO: select Issue Logic
+        tableView.allowsMultipleSelection = true
+        tableView.allowsSelectionDuringEditing = true
+        DispatchQueue.main.async { [unowned self] in
+            self.navigationItem.setRightBarButton(cancelButton, animated: false)
+        }
+    }
+
+    // TODO: - 취소 버튼을 누르면 어떤일이 실행되어야 할까?
+    /// 1. 하단에 반응형으로 나타나던 뷰가 사라짐
+    /// 2. 모든 셀들의 selected 상태가 false 로 변경됨
+    /// 2-1. VC 에서 모든 cell 을 보는 방법
+    /// 2-2.  checkBox.isHidden = true 를 전달할 방법 모색
+    ///     셀 그리기 작업에서 체크박스를 다뤄야하 하는 것은 아닐까?
+    /// 3. 오른쪽 네비게이션 아이템을 선택으로 변경
+    /// 4. 테이블 뷰의 셀렉트 기능을 끔
+    @objc func cancelButtonPressed(_ sender: Any) {
+        tableView.allowsMultipleSelection = false
+        tableView.allowsSelectionDuringEditing = false
+        DispatchQueue.main.async { [unowned self] in
+            self.navigationItem.setRightBarButton(selectButton, animated: false)
+            self.tableView.reloadData()
+        }
     }
 }
 
@@ -111,15 +143,15 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
         let issueItem = viewModel.issueList.value[indexPath.row]
         let cellViewModel = IssueCellViewModel(issue: issueItem)
         cell.setComponenets(with: cellViewModel)
-
+        cell.isSelected = false
         return cell
     }
 
     // MARK: - 좌 스와이프
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let issueDelete = UIContextualAction(style: .destructive, title: "삭제") {
             (_, _, success: @escaping (Bool) -> Void) in
-            print("삭제 버튼 눌림")
             success(true)
         }
         issueDelete.backgroundColor = .systemPink
@@ -127,7 +159,6 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
 
         let issueClose = UIContextualAction(style: .normal, title: "닫기") {
             (_, _, success: @escaping (Bool) -> Void) in
-            print("이슈 닫기 버튼 눌림")
             success(true)
         }
         issueClose.backgroundColor = .systemBlue
