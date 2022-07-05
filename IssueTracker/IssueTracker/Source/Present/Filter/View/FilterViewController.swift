@@ -9,6 +9,8 @@ import UIKit
 
 class FilterViewController: UIViewController {
 
+    private let filterViewModel = FilterViewModel()
+
     private lazy var filteringButton: UIBarButtonItem = {
             let button = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(filteringButtonPressed(_:)))
             return button
@@ -17,6 +19,7 @@ class FilterViewController: UIViewController {
     private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(FilterCell.self, forCellReuseIdentifier: FilterCell.reuseIdentifier)
+
         return tableView
     }()
 
@@ -49,8 +52,9 @@ class FilterViewController: UIViewController {
 
 extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
         switch section {
-        case 0:
+        case FilterViewModel.Section.state.rawValue:
             return 5
         case 1:
             return 0
@@ -61,8 +65,8 @@ extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0:
-            return "상태"
+        case FilterViewModel.Section.state.rawValue:
+            return FilterViewModel.Section.state.value
         case 1:
             return "작성자"
         default:
@@ -76,7 +80,7 @@ extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FilterCell.reuseIdentifier, for: indexPath) as? FilterCell else { return UITableViewCell() }
-        cell.setComponents(with: "please")
+        cell.setComponents(with: filterViewModel.stateSection[indexPath.row])
         return cell
 
     }
