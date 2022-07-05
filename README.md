@@ -1,79 +1,132 @@
-# Issue Tracker
-* 깃허브 Issue를 모바일로 다루는 앱
-* 개발 기간: 22.06.13 ~ 22.07.01
+# IssueTracker 
 
-## 프로젝트 소개
+- Github 와 연동하여 Issue를 관리할 수 있는 앱 
+- 개발 기간 : 2022.06.13 ~  2022.07.01 
+- 팀원
+    * Jazz의 신 [체즈](https://github.com/asqw887)
+    * 구찌갱 [구찌](https://github.com/Damagucci-Juice)
+---
 
-깃허브에서 제공하는 이슈 기능을 모바일에서 관리하는 어플리케이션입니다. 
-
-## 🧑‍💻 팀원
-
-|   iOS     |
-| ---------- |
-|  Chez [@asqw887](https://github.com/asqw887)  |
-|  Damagucci-Juice [@Damagucci-Juice](https://github.com/Damagucci-Juice)  |
+# 데모  
 
 
-## 🎯 핵심 기능
+| 로그인 화면 | 이슈 목록 화면 | 깃허브 모바일 웹 로그인 화면 | 이슈 선택 화면|
+| -------- | -------- | -------- | -------- |
+| ![](https://i.imgur.com/Qa0rdNs.png)| ![](https://i.imgur.com/VUtoEBf.png)| ![](https://i.imgur.com/YzLkDjM.png)| ![](https://i.imgur.com/9EvZc2p.png)|
 
-- Oauth Github & Apple Login 
-- 네트워크 리퀘스트 스타일에 중점
-- MVVM을 도입할 때 
-    - 뷰와 컴포넌트를 어떻게 나눌까?
-    - 객체가 하는 행위의 구체화
+# 기능
 
-## API 요청 흐름
+## 흐름도
+![](https://i.imgur.com/6LXyGzc.png)
 
-* 로그인 요청 흐름 
-
-
-## 💡 고민과 해결
-
-<details>
-<summary> 
-<h3> 💡 네트워크 요청 추상화에 대한 고민(목적 당 리퀘스트 함수가 늘어날 때 관리 편의성) </h3>
-</summary>
-
-- AccessToken 요청, Issue 목록 요청 등 여러개의 리퀘스트 함수들이 모두 분리되어 있어 비슷한 역할임에도 중복코드가 늘어나 요청 객체를 편리하게 관리하게 해주려는 시도를 함. 
-- [Tiny Network 모델](https://github.com/jdisho/TinyNetworking) 을 참조해 enum case로 request API 들을 관리하고, 요청에 필요한 것들을 case 분기처리를 해서 갖도록 함.
-- 요청 객체가 더 필요하게 되면 case 를 더 추가해주면 되고(확장성 증가), enum에서 모든 케이스에 대해 처리를 해주어야 하기 때문에 필요한 값을 모두 셋팅해 주어야 된다는 장점이 있음. 
-
-</details>
+# 고민과 해결 
 
 
-<details>
-<summary> 
-<h3> 💡 사용자의 민감한 정보를 어떻게 관리를 하면 좋을지에 대한 고민 </h3>
-</summary>
+## 1️⃣ 네트워크 타겟 설정할 때 코드 깔끔하게 하려는 시도
+
+-  이전에는 BaseTareget에 content-type, header-type 등이 있었는데, 지금은 HTTP Header 만 만들고, 그 안에서 열거형 케이스를 분리해서 코드를 숨김
+- 또한 분리한 열거형 케이스에서 딕셔너리 값으로 표현해서, 세부적으로 숨김
     
-- 키체인을 사용하려다가 구현의 어려움 및 앱을 삭제해도 데이터가 남는다는 이야기를 듣고 XCconfig 를 사용하기로 결정했습니다. 
     
-- 문제점이 있었는데, 하나는 GitHub 에 민감정보 파일을 업로드하지 못하기 때문에 다른 작업자가 앱을 실행하지 못하는 문제점이 있었습니다.
+```swift
+//MARK: - BaseTarget
+    var header: HTTPHeader? {
+        switch self {
+        case .requestAuthorizeCode:
+            return nil
+        case .requestAccessToken:
+            return .oauth
+        case .requestIssueList(let token), .requestLoginStatus(let token):
+            return .githubAPIRequest(token: token)
+        }
+    }
+
+
+//MARK: - HTTPHeader
+
+enum HTTPHeader {
+    case oauth
+    case githubAPIRequest(token: String)
+
+    var dictionary: [String: String] {
+        switch self {
+        case .oauth:
+            return [
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            ]
+        case .githubAPIRequest(let token):
+            return [
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json",
+                "Authorization": "token \(token)"
+            ]
+        }
+    }
+
+}
+
+```
+## 2️⃣ 사용자의 민감정보, 토큰 값, client_id, client_secret 등을 어떻게 코드에서 숨길지 고민
+
+* XCConfig를 현업에서도 종종 사용한다 하여 사용함
+* 다만, GitHub에 올라가는 만큼 그 부분은 `.gitignore`에서 추적할 파일에서 제외하였음
     
-- 작업자들 끼리 서로 필요한 것(xcconfig)들을 Readme에 명시를 해두고, 작업 진행 상황을 공유할 필요성을 느꼈습니다. 
-- 구글링 후 프로젝트 Scheme 도 추가하고 XCConfig 도 추가해서 해결하였습니다.
-- 그 중에 추가한 Scheme 이 적용이 안되는 문제가 있었는데 , 프로젝트에 Build Settings 에서 active compilation Conditions 에 추가해주었더니 문제가 해결되었습니다.
-- 빌드 시 배포,개발 등 여러 스킴에 대해 다른 XCconfig 설정을 해주어, 개발 환경을 다르게 셋팅 할 수 있다는 것을 배웠습니다. 
+## 3️⃣ 네트워크 계층 추상화 : IssueTrackerTarget, BaseTarget, Repository, Provider 등의 역할과 의미
 
-</details>
+* 처음 하게된 계기는 이 프로젝트에서 네트워크를 요청하는 코드가 많은데 그 사이에 재사용성을 높혀보자한 것이 시작입니다.
+* 그러다가 네트워크 리퀘스트 스타일이라는 키워드를 알게되어서 공부하였습니다.
+    * TinyNework
+    * Alamofire
+    * Moya
+* 등을 학습하다 URL Session을 사용하여 하는 코드베이스를 구현해려는 점과 코드가 그렇게 많지 않아 `TinyNetwork`를 모방해서 작성해보았습니다.
+* 그 결과 새로운 Network 요청 흐름이 생겨도 IssueTrackerTarget에서 케이스만 추가해주면 상황에 맞는 속성 값들을 추가해 주어 편리해졌습니다.
+```swift
+//MAKR: - Target이 가져야 하는 속성 정의
+/// baseURL, path, HTTPheader, HTTPmethod 등
+protocol BaseTarget {}
 
-<details>
-<summary> 
-<h3> 💡 HTTP Request 에 대한 이해 부족에 따른 Request 요청 실패  </h3>
-</summary>
-    
-![Header 관리](https://user-images.githubusercontent.com/50472122/174515144-ab0e3676-23db-408a-90ae-220165d30c1c.png)
-    
-- HTTP Header 에서 Content-Type Header 와 Accept Header 이용시 어려움    
-- URL Request Header 에 Content-Type 을 담아줘야 하는데 그 부분을 이해를 못했습니다. 
-- Content-Type 은 Request 메시지와 Response 메시지 모두에 담겨야 한다는 것을 배웠습니다.
-- Accept-Type 은 Request 메시지에 담기는데 Response 받을 데이터의 포맷을 지정하는 효과가 있다는 것을 배웠습니다. 
+//MARK: - case 마다 네트워크 요청 흐름을 가정해서 HTTPHeader와 Body등을 구성
+enum IssueTrackerTarget: BaseTarget {}
 
-</details>
+//MAKR: - 정의된 Target을 매개변수로 넘겨받아 URLRequest를 만들거나, urlRequest로 네트워크 요청하는 메소드로 구성
+class Provider {}
 
-<details>
-<summary> 
-<h3> 💡 MVVM 구조에서 객체간의 바인딩을 어떻게하면 좋을지에 대한 고민  </h3>
-</summary>
-    - 추후 객체간 활동이 명확해지기 전에 이 부분에 대해 의논할 예정입니다.(6.20)
-</details>
+//MARK: - Provider의 클래스 메서드만을 이용해서 서버에 요청을 보냄
+class LoginRepository {}
+class IssueTrackingRepository {}
+```
+
+## 4️⃣ MVVM을 위해 객체간 바인딩 방식의 고민과 그 선택의 이유
+
+-  mvvm 구조에 따라 viewModel의 값이 변경될 때 View가 이를 알아 업데이트 할수있도록 VM-View 간 바인딩의 필요성을 깨달음.
+-  초기에는 **클로저 바인딩 방식** 으로 뷰모델의 상태가 없데이트 될때 View에게 알려주도록 시도함 
+- **상태 변화가 필요한 프로퍼티가 늘어남에 따라 클로저의 양이 늘어나는 문제가 있었음**
+- 클로저 대신 값이 설정되면 등록된 listener에게 상태값과 시점을 전달 해줄 수 있는 **`Observable` 객체를 활용하여 리팩토링** 을 진행.
+- 어떤 프로퍼티의 값을 관찰하는지 보기가 용이하고, 후에 Rxswift 를 학습을 하기 위해 기본이 되는 관찰자 패턴 흐름을 알 수 있었음. 
+
+ ```swift
+class Observable<T> {
+
+    typealias Listener = (T) -> Void
+    var listener: Listener?
+
+    func bind(_ listener: Listener?) {
+        self.listener = listener
+        listener?(value)
+    }
+
+    var value: T {
+        didSet {
+            listener?(value)
+        }
+    }
+
+    init(_ value: T) {
+        self.value = value
+    }
+}
+
+ ```
+
+ 
