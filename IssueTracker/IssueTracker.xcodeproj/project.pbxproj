@@ -16,6 +16,7 @@
 		00B2A267285867A400D201D3 /* IssueResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B2A266285867A400D201D3 /* IssueResponse.swift */; };
 		00B2A26928586D0600D201D3 /* Issue.json in Resources */ = {isa = PBXBuildFile; fileRef = 00B2A26828586D0600D201D3 /* Issue.json */; };
 		00B2A27128586F9D00D201D3 /* MockIssueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B2A27028586F9D00D201D3 /* MockIssueTest.swift */; };
+		00D69578286D6F950092ECAA /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D69577286D6F950092ECAA /* PaddingLabel.swift */; };
 		00E87234285C3C3600C527B5 /* Eevironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E87233285C3C3600C527B5 /* Eevironment.swift */; };
 		2DF2770E9554CFA7A43BF1F6 /* Pods_IssueTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723F045752A9006DEAC1B352 /* Pods_IssueTracker.framework */; };
 		B3419D33285C1EC800F1273C /* LoginRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3419D32285C1EC800F1273C /* LoginRepository.swift */; };
@@ -73,6 +74,7 @@
 		00B2A26828586D0600D201D3 /* Issue.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Issue.json; sourceTree = "<group>"; };
 		00B2A26E28586F9D00D201D3 /* MockIssueTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MockIssueTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00B2A27028586F9D00D201D3 /* MockIssueTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockIssueTest.swift; sourceTree = "<group>"; };
+		00D69577286D6F950092ECAA /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		00E8722F285C1F3E00C527B5 /* GitHubClient.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = GitHubClient.xcconfig; sourceTree = "<group>"; };
 		00E87233285C3C3600C527B5 /* Eevironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eevironment.swift; sourceTree = "<group>"; };
 		367146F3B09437CB1929CCDA /* Pods-IssueTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IssueTracker.debug.xcconfig"; path = "Target Support Files/Pods-IssueTracker/Pods-IssueTracker.debug.xcconfig"; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 			children = (
 				B3773F36285864E2008C4AAF /* IssueListViewController.swift */,
 				B3773F3828586D97008C4AAF /* IssueCell.swift */,
+				00D69577286D6F950092ECAA /* PaddingLabel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -598,6 +601,7 @@
 				B3773F37285864E2008C4AAF /* IssueListViewController.swift in Sources */,
 				B3BFBD3628572E5400D69A34 /* AppDelegate.swift in Sources */,
 				B3773F2E28585237008C4AAF /* Tag.swift in Sources */,
+				00D69578286D6F950092ECAA /* PaddingLabel.swift in Sources */,
 				B3D736F02861893D0053E887 /* IssueListViewModel.swift in Sources */,
 				B3419D33285C1EC800F1273C /* LoginRepository.swift in Sources */,
 				00B2A267285867A400D201D3 /* IssueResponse.swift in Sources */,
