@@ -23,7 +23,8 @@ final class IssueCellViewModel {
     }
     var tag: String {
         // TODO: CellView에서 태그가 여러개 나올 수 있도록 기능 구현 후, 배열 전체를 반환하도록 변경
-        return issue.tag?.first?.title ?? ""
+        guard let title = issue.tag?.first?.title else { return "" }
+        return title
     }
     var milestone: String {
         guard let title = issue.milestone?.title else { return "🪧"}

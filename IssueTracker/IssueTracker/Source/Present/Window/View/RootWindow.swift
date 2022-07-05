@@ -20,7 +20,7 @@ final class RootWindow: UIWindow {
     }
 
     private func bind() {
-        rootWindowViewModel.isValidLogin.bind { answer in
+        rootWindowViewModel.isValidLogin.bind { [unowned self] answer in
             if answer {
                 DispatchQueue.main.async {
                     let tabBarVC = TabBarViewController()
