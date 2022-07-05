@@ -96,8 +96,10 @@ final class IssueListViewController: UIViewController {
         self.navigationItem.setRightBarButton(selectButton, animated: true)
     }
 
-    @objc func filterButtonPressed(_ sender: Any) {
-        // TODO: filter Modal present
+
+    @objc private func filterButtonPressed(_ sender: Any) {
+        self.navigationController?.pushViewController(FilterViewController(), animated: true)
+
     }
 
     @objc func selectButtonPressed(_ sender: UIBarButtonItem!) {
@@ -132,6 +134,7 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfItemsInSection
     }
+
     // MARK: - Datasource 설정
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -144,6 +147,7 @@ extension IssueListViewController: UITableViewDelegate, UITableViewDataSource {
         let cellViewModel = IssueCellViewModel(issue: issueItem)
         cell.setComponenets(with: cellViewModel)
         cell.isSelected = false
+
         return cell
     }
 

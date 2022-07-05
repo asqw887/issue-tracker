@@ -13,6 +13,7 @@ final class IssueCell: UITableViewCell {
     static let reuseIdentifier = "IssueCell"
     let issueListViewModel = IssueListViewModel()
 
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addsubviews()
